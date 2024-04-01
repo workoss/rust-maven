@@ -22,7 +22,17 @@ class JniLibLoader {
         libName: String,
         withPlatformDir: Boolean = false
     ): Boolean {
-        return loadLibrary(null,System.getProperty("java.io.tmpdir"),libName,withPlatformDir)
+        return loadLibrary(null, System.getProperty("java.io.tmpdir"), libName, withPlatformDir)
+    }
+
+    @Synchronized
+    @Throws(IOException::class)
+    fun loadLibrary(
+        classLoader: ClassLoader?,
+        libName: String,
+        withPlatformDir: Boolean = false
+    ): Boolean {
+        return loadLibrary(classLoader, System.getProperty("java.io.tmpdir"), libName, withPlatformDir)
     }
 
     @Synchronized
@@ -30,6 +40,19 @@ class JniLibLoader {
     fun loadLibrary(
         classLoader: ClassLoader?,
         tmpDir: String,
+        libName: String,
+        withPlatformDir: Boolean = false
+    ): Boolean {
+        //load jar
+        return loadLibrary(classLoader, tmpDir, null,libName, withPlatformDir)
+    }
+
+    @Synchronized
+    @Throws(IOException::class)
+    fun loadLibrary(
+        classLoader: ClassLoader?,
+        tmpDir: String,
+        prefix: String?,
         libName: String,
         withPlatformDir: Boolean = false
     ): Boolean {
@@ -43,13 +66,14 @@ class JniLibLoader {
             }
         }
         //load jar
-        return loadLibraryFromJar(classLoader, tmpDir, libName, withPlatformDir)
+        return loadLibraryFromJar(classLoader, tmpDir, prefix, libName, withPlatformDir)
     }
 
     companion object {
 
         private val log = LoggerFactory.getLogger("io.github.workoss.jni.JniLibLoader")
 
+        @JvmStatic
         val instance: JniLibLoader by lazy(
             mode = LazyThreadSafetyMode.SYNCHRONIZED, initializer = ::JniLibLoader
         )
@@ -59,14 +83,14 @@ class JniLibLoader {
             val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
             libName = libName.replace(libSuffix, "")
 
-            if (!isWindows && libName.startsWith("lib")){
-                libName = libName.replaceFirst("lib","")
+            if (!isWindows && libName.startsWith("lib")) {
+                libName = libName.replaceFirst("lib", "")
             }
             return libName
         }
 
         fun getJniLibName(libName: String): String {
-            val libName = libName.replace("-","_")
+            val libName = libName.replace("-", "_")
             val libPrefix = if (isWindows) "" else "lib";
             val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
             return "$libPrefix$libName$libSuffix"
@@ -75,7 +99,7 @@ class JniLibLoader {
         fun getJniLibPath(libName: String, withPlatformDir: Boolean = false): String {
             val libPrefix = if (isWindows) "" else "lib";
             val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
-            val libName = libName.replace("-","_")
+            val libName = libName.replace("-", "_")
             if (withPlatformDir) {
                 return "$os-$arch/$libPrefix$libName$libSuffix"
             }
@@ -87,13 +111,15 @@ class JniLibLoader {
         private fun loadLibraryFromJar(
             classLoader: ClassLoader?,
             tmpDir: String,
+            prefix: String?,
             libName: String,
             withPlatformDir: Boolean = false
         ): Boolean {
             var classLoader = classLoader ?: JniLibLoader::class.java.classLoader
             val fullLibraryPath = getJniLibPath(libName, withPlatformDir)
             // tmp+ fullLibraryPath
-            val tmpLibFulPath = Paths.get("$tmpDir$fullLibraryPath").toAbsolutePath()
+            var prefixPath = if (prefix != null) "$prefix/" else ""
+            val tmpLibFulPath = Paths.get("$tmpDir$prefixPath$fullLibraryPath").toAbsolutePath()
             tmpLibFulPath.deleteIfExists().also {
                 if (it) {
                     log.info("$tmpLibFulPath was deleted")
@@ -102,7 +128,7 @@ class JniLibLoader {
             //create parent dir if not exists
             val parentFile = tmpLibFulPath.parent.toFile()
             if (!parentFile.exists()) {
-                parentFile.mkdir()
+                parentFile.mkdirs()
             }
             var resourceStream: InputStream? = null;
             try {
