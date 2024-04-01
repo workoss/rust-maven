@@ -61,6 +61,7 @@ class JniLibLoader {
             try {
                 System.loadLibrary(libraryName)
                 log.info("[LIB] load {} success", libName)
+                return true
             } catch (e: UnsatisfiedLinkError) {
                 log.warn("[LIB] load {} error:{}", libName, e.message)
             }
@@ -97,13 +98,17 @@ class JniLibLoader {
         }
 
         fun getJniLibPath(libName: String, withPlatformDir: Boolean = false): String {
+            return getJniLibPath(null, libName, withPlatformDir)
+        }
+        fun getJniLibPath(prefix: String?,libName: String, withPlatformDir: Boolean = false): String {
+            var prefix = if (prefix != null) "$prefix/" else ""
             val libPrefix = if (isWindows) "" else "lib";
             val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
             val libName = libName.replace("-", "_")
             if (withPlatformDir) {
-                return "$os-$arch/$libPrefix$libName$libSuffix"
+                return "$prefix$os-$arch/$libPrefix$libName$libSuffix"
             }
-            return "$libPrefix$libName-$os-$arch$libSuffix"
+            return "$prefix$libPrefix$libName-$os-$arch$libSuffix"
         }
 
 
@@ -116,10 +121,9 @@ class JniLibLoader {
             withPlatformDir: Boolean = false
         ): Boolean {
             var classLoader = classLoader ?: JniLibLoader::class.java.classLoader
-            val fullLibraryPath = getJniLibPath(libName, withPlatformDir)
+            val fullLibraryPath = getJniLibPath(prefix,libName, withPlatformDir)
             // tmp+ fullLibraryPath
-            var prefixPath = if (prefix != null) "$prefix/" else ""
-            val tmpLibFulPath = Paths.get("$tmpDir$prefixPath$fullLibraryPath").toAbsolutePath()
+            val tmpLibFulPath = Paths.get("$tmpDir$fullLibraryPath").toAbsolutePath()
             tmpLibFulPath.deleteIfExists().also {
                 if (it) {
                     log.info("$tmpLibFulPath was deleted")
