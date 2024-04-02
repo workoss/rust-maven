@@ -44,7 +44,7 @@ class JniLibLoader {
         withPlatformDir: Boolean = false
     ): Boolean {
         //load jar
-        return loadLibrary(classLoader, tmpDir, null,libName, withPlatformDir)
+        return loadLibrary(classLoader, tmpDir, null, libName, withPlatformDir)
     }
 
     @Synchronized
@@ -100,7 +100,8 @@ class JniLibLoader {
         fun getJniLibPath(libName: String, withPlatformDir: Boolean = false): String {
             return getJniLibPath(null, libName, withPlatformDir)
         }
-        fun getJniLibPath(prefix: String?,libName: String, withPlatformDir: Boolean = false): String {
+
+        fun getJniLibPath(prefix: String?, libName: String, withPlatformDir: Boolean = false): String {
             var prefix = if (prefix != null) "$prefix/" else ""
             val libPrefix = if (isWindows) "" else "lib";
             val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
@@ -121,7 +122,7 @@ class JniLibLoader {
             withPlatformDir: Boolean = false
         ): Boolean {
             var classLoader = classLoader ?: JniLibLoader::class.java.classLoader
-            val fullLibraryPath = getJniLibPath(prefix,libName, withPlatformDir)
+            val fullLibraryPath = getJniLibPath(prefix, libName, withPlatformDir)
             // tmp+ fullLibraryPath
             val tmpLibFulPath = Paths.get("$tmpDir$fullLibraryPath").toAbsolutePath()
             tmpLibFulPath.deleteIfExists().also {
@@ -134,22 +135,19 @@ class JniLibLoader {
             if (!parentFile.exists()) {
                 parentFile.mkdirs()
             }
-            var resourceStream: InputStream? = null;
             try {
-                resourceStream = classLoader.getResourceAsStream(fullLibraryPath)
-                if (resourceStream == null) {
-                    throw RuntimeException("$libName was not found inside JAR.")
-                }
-                Files.copy(resourceStream, tmpLibFulPath, StandardCopyOption.REPLACE_EXISTING)
+                classLoader.getResourceAsStream(fullLibraryPath)
+                    .use {
+                        if (it == null) {
+                            throw RuntimeException("$libName was not found inside JAR.")
+                        }
+                        Files.copy(it, tmpLibFulPath, StandardCopyOption.REPLACE_EXISTING)
+                    }
                 System.load(tmpLibFulPath.toString())
                 return true
             } catch (e: InvalidPathException) {
                 log.error("Invalid path: $tmpLibFulPath", e)
                 return false
-            } finally {
-                if (resourceStream != null) {
-                    resourceStream.close()
-                }
             }
         }
 
