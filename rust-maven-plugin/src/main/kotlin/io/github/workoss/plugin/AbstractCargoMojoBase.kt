@@ -7,7 +7,7 @@ import org.apache.maven.project.MavenProject
 import java.nio.file.Path
 import java.nio.file.Paths
 
-abstract class AbstractCargoMojoBase: AbstractMojo() {
+abstract class AbstractCargoMojoBase : AbstractMojo() {
     @Parameter(property = "project", readonly = true)
     protected var project: MavenProject? = null
 
@@ -24,7 +24,7 @@ abstract class AbstractCargoMojoBase: AbstractMojo() {
      * Path to the Rust crate to build.
      */
     @Parameter(property = "path", required = true)
-    private val path: String? = null
+    private val path: String = ""
 
     /**
      * Build artifacts in release mode, with optimizations.

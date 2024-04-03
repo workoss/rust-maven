@@ -82,14 +82,14 @@ class Crate(
             val crateTypes: TomlArray = crateTypes ?: return false
 
             for (index in 0 until crateTypes.size()) {
-                val crateType: String = crateTypes.getString(index)
-                if ((crateType != null) && (crateType == "cdylib")) {
+                val crateType: String? = crateTypes.getString(index)
+                if (crateType != null && crateType == "cdylib") {
                     return true
                 }
             }
 
             return false
-        } catch (e: TomlInvalidTypeException) {
+        } catch (_: TomlInvalidTypeException) {
             return false
         }
     }
@@ -161,7 +161,7 @@ class Crate(
                 var name: String?
                 try {
                     name = bin.getString("name")
-                } catch (e: TomlInvalidTypeException) {
+                } catch (_: TomlInvalidTypeException) {
                     throw MojoExecutionException(
                         "Failed to extract `bin`s from Cargo.toml file: " +
                                 "expected a string at index " + index + " `name` key"
@@ -178,7 +178,7 @@ class Crate(
                 var path: String?
                 try {
                     path = bin.getString("path")
-                } catch (e: TomlInvalidTypeException) {
+                } catch (_: TomlInvalidTypeException) {
                     throw MojoExecutionException(
                         "Failed to extract `bin`s from Cargo.toml file: " +
                                 "expected a string at index " + index + " `path` key"
@@ -313,7 +313,7 @@ class Crate(
         }
 
         val cleanedFeatures = params.cleanedFeatures()
-        if (cleanedFeatures.size > 0) {
+        if (cleanedFeatures.isNotEmpty()) {
             args.add("--features")
             args.add(java.lang.String.join(",", *cleanedFeatures))
         }
@@ -322,9 +322,9 @@ class Crate(
             args.add("--tests")
         }
 
-        if (params.extraArgs != null) {
-            Collections.addAll(args, *params.extraArgs)
-        }
+//        if (params.extraArgs != null) {
+        Collections.addAll(args, *params.extraArgs)
+//        }
     }
 
     @Throws(MojoExecutionException::class, MojoFailureException::class)
@@ -348,22 +348,19 @@ class Crate(
         var copyToDir: Path = params.copyToDir ?: return null
 
         if (params.copyWithPlatformDir) {
-            copyToDir = copyToDir.resolve(OS.os + "-" + OS.arch)
+            copyToDir = copyToDir.resolve("${OS.os}-${OS.arch}")
         }
 
         if (!Files.exists(copyToDir, LinkOption.NOFOLLOW_LINKS)) {
             try {
                 Files.createDirectories(copyToDir)
             } catch (e: IOException) {
-                throw MojoExecutionException(
-                    "Failed to create directory " + copyToDir +
-                            ": " + e.message, e
-                )
+                throw MojoExecutionException("Failed to create directory $copyToDir : ${e.message}", e)
             }
         }
 
         if (!Files.isDirectory(copyToDir)) {
-            throw MojoExecutionException(copyToDir.toString() + " is not a directory")
+            throw MojoExecutionException("$copyToDir is not a directory")
         }
         return copyToDir
     }
@@ -422,17 +419,17 @@ class Crate(
          * Returns the features array with empty and null elements removed.
          */
         fun cleanedFeatures(): Array<String?> {
-            if ((features == null) || (features.size == 0)) {
-                return arrayOfNulls(0)
-            }
+//            if (features == null || features.size == 0) {
+//                return arrayOfNulls(0)
+//            }
             val cleanedFeatures: MutableList<String?> = ArrayList()
             for (feature in features) {
-                if (feature != null) {
-                    var feature = feature.trim { it <= ' ' }
-                    if (!feature.isEmpty()) {
-                        cleanedFeatures.add(feature)
-                    }
+//                if (feature != null) {
+                var feature = feature.trim { it <= ' ' }
+                if (!feature.isEmpty()) {
+                    cleanedFeatures.add(feature)
                 }
+//                }
             }
             return cleanedFeatures.toTypedArray<String?>()
         }

@@ -4,9 +4,10 @@ import java.io.*
 import java.util.*
 import java.util.regex.Pattern
 
+@Suppress("unused")
 object OS {
 
-    private object osDetector : Detector() {
+    private object OSDetector : Detector() {
         val detectedProperties: Properties = System.getProperties()
 
         init {
@@ -18,23 +19,23 @@ object OS {
         val classifier: String = detectedProperties[DETECTED_CLASSIFIER] as String
     }
 
-    val os: String = osDetector.os
-    val arch: String = osDetector.arch
-    val classifier: String = osDetector.classifier
+    val os: String = OSDetector.os
+    val arch: String = OSDetector.arch
+    val classifier: String = OSDetector.classifier
 
-    const val windows: String = "windows"
-    const val linux: String = "linux"
-    const val osx: String = "osx"
+    const val WINDOWS: String = "windows"
+    const val LINUX: String = "linux"
+    const val OSX: String = "osx"
 
-    const val x86_32: String = "x86_32"
-    const val x86_64: String = "x86_64"
+    const val X86_32: String = "x86_32"
+    const val X86_64: String = "x86_64"
 
-    val isWindows: Boolean = os == windows
-    val isLinux: Boolean = os == linux
-    val isOSX: Boolean = os == osx
+    val isWindows: Boolean = os == WINDOWS
+    val isLinux: Boolean = os == LINUX
+    val isOSX: Boolean = os == OSX
 
-    val is32bit: Boolean = arch == x86_32
-    val is64bit: Boolean = arch == x86_64
+    val is32bit: Boolean = arch == X86_32
+    val is64bit: Boolean = arch == X86_64
 
 }
 
@@ -104,7 +105,7 @@ abstract class Detector {
         }
     }
 
-    private class LinuxRelease internal constructor(val id: String, val version: String?, like: Set<String?>?) {
+    private class LinuxRelease(val id: String, val version: String?, like: Set<String?>?) {
         val like: Collection<String?> = Collections.unmodifiableCollection(like!!)
     }
 
@@ -295,7 +296,7 @@ abstract class Detector {
                 if (id != null) {
                     return LinuxRelease(id, version, likeSet)
                 }
-            } catch (ignored: IOException) {
+            } catch (_: IOException) {
                 // Just absorb. Don't treat failure to read /etc/os-release as an error.
             } finally {
                 closeQuietly(reader)
@@ -309,39 +310,35 @@ abstract class Detector {
          * Other variants will return `null`.
          */
         private fun parseLinuxRedhatReleaseFile(file: File): LinuxRelease? {
-            var reader: BufferedReader? = null
             try {
-                reader = BufferedReader(InputStreamReader(FileInputStream(file), "utf-8"))
-
-                // There is only a single line in this file.
-                var line = reader.readLine()
-                if (line != null) {
-                    line = line.lowercase(Locale.US)
-                    val id: String
-                    var version: String? = null
-                    id = if (line.contains("centos")) {
-                        "centos"
-                    } else if (line.contains("fedora")) {
-                        "fedora"
-                    } else if (line.contains("red hat enterprise linux")) {
-                        "rhel"
-                    } else {
-                        // Other variants are not currently supported.
-                        return null
+                BufferedReader(InputStreamReader(FileInputStream(file), "utf-8"))
+                    .use {
+                        var line = it.readLine()
+                        if (line != null) {
+                            line = line.lowercase(Locale.US)
+                            var version: String? = null
+                            val id: String = if (line.contains("centos")) {
+                                "centos"
+                            } else if (line.contains("fedora")) {
+                                "fedora"
+                            } else if (line.contains("red hat enterprise linux")) {
+                                "rhel"
+                            } else {
+                                // Other variants are not currently supported.
+                                return null
+                            }
+                            val versionMatcher = REDHAT_MAJOR_VERSION_REGEX.matcher(line)
+                            if (versionMatcher.find()) {
+                                version = versionMatcher.group(1)
+                            }
+                            val likeSet: MutableSet<String?> =
+                                LinkedHashSet(listOf(*DEFAULT_REDHAT_VARIANTS))
+                            likeSet.add(id)
+                            return LinuxRelease(id, version, likeSet)
+                        }
                     }
-                    val versionMatcher = REDHAT_MAJOR_VERSION_REGEX.matcher(line)
-                    if (versionMatcher.find()) {
-                        version = versionMatcher.group(1)
-                    }
-                    val likeSet: MutableSet<String?> =
-                        LinkedHashSet(listOf(*DEFAULT_REDHAT_VARIANTS))
-                    likeSet.add(id)
-                    return LinuxRelease(id, version, likeSet)
-                }
-            } catch (ignored: IOException) {
+            } catch (_: IOException) {
                 // Just absorb. Don't treat failure to read /etc/os-release as an error.
-            } finally {
-                closeQuietly(reader)
             }
             return null
         }
@@ -354,7 +351,7 @@ abstract class Detector {
         private fun closeQuietly(obj: Closeable?) {
             try {
                 obj?.close()
-            } catch (ignored: IOException) {
+            } catch (_: IOException) {
                 // Ignore.
             }
         }

@@ -10,7 +10,7 @@ interface Shlex {
          *
          * @param s The string to escape.
          * @return The escaped string.
-         * @see [shlex.quote](https://docs.python.org/3/library/shlex.html.shlex.quote)
+         * @see (https://docs.python.org/3/library/shlex.html.shlex.quote)
          */
         fun quote(s: String): String {
             if (s.isEmpty()) return "''"
@@ -22,7 +22,7 @@ interface Shlex {
         fun quote(args: List<String?>): String {
             val sb = StringBuilder()
             for (arg in args) {
-                if (sb.length > 0) sb.append(' ')
+                if (sb.isNotEmpty()) sb.append(' ')
                 sb.append(quote(arg.toString()))
             }
             return sb.toString()

@@ -1,7 +1,6 @@
 
 package io.github.workoss.plugin
 
-import io.github.workoss.plugin.Shlex
 import org.apache.maven.plugin.MojoExecutionException
 import java.io.File
 
@@ -27,7 +26,7 @@ class CargoInstalledChecker private constructor() {
                 ) InstalledState.INSTALLED
                 else InstalledState.BROKEN
                 cache[cargoPath] = cached
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 cached = InstalledState.NOT_INSTALLED
                 cache[cargoPath] = cached
             }

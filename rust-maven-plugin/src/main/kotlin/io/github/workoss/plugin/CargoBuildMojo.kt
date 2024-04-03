@@ -11,6 +11,7 @@ import java.nio.file.Paths
 /**
  * An example of a Maven plugin.
  */
+@Suppress("unused")
 @Mojo(name = "build", defaultPhase = LifecyclePhase.COMPILE, threadSafe = true)
 class CargoBuildMojo : AbstractCargoMojoBase() {
     /**

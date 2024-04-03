@@ -6,14 +6,13 @@ import io.github.workoss.jni.OS.isWindows
 import io.github.workoss.jni.OS.os
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.deleteIfExists
 
-
+@Suppress("unused")
 class JniLibLoader {
 
     @Synchronized
@@ -81,7 +80,7 @@ class JniLibLoader {
 
         fun getLibName(jniLibName: String): String {
             var libName = jniLibName
-            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
+            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so"
             libName = libName.replace(libSuffix, "")
 
             if (!isWindows && libName.startsWith("lib")) {
@@ -92,8 +91,8 @@ class JniLibLoader {
 
         fun getJniLibName(libName: String): String {
             val libName = libName.replace("-", "_")
-            val libPrefix = if (isWindows) "" else "lib";
-            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
+            val libPrefix = if (isWindows) "" else "lib"
+            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so"
             return "$libPrefix$libName$libSuffix"
         }
 
@@ -103,8 +102,8 @@ class JniLibLoader {
 
         fun getJniLibPath(prefix: String?, libName: String, withPlatformDir: Boolean = false): String {
             var prefix = if (prefix != null) "$prefix/" else ""
-            val libPrefix = if (isWindows) "" else "lib";
-            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so";
+            val libPrefix = if (isWindows) "" else "lib"
+            val libSuffix = if (isWindows) ".dll" else if (isOSX) ".dylib" else ".so"
             val libName = libName.replace("-", "_")
             if (withPlatformDir) {
                 return "$prefix$os-$arch/$libPrefix$libName$libSuffix"
