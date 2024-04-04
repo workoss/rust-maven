@@ -9,4 +9,4 @@
 
 build jni/jni-kt rust-maven-plugin with kotlin
 
-Thanks to [rust-maven-plugin](https://github.com/questdb/rust-maven-plugin)
+Thanks [rust-maven-plugin](https://github.com/questdb/rust-maven-plugin)
