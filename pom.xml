@@ -6,9 +6,51 @@
 
     <groupId>io.github.workoss</groupId>
     <artifactId>rust-maven</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
+
+    <url>https://github.com/workoss/rust-maven</url>
+    <description>rust maven plugin and jni lib loader</description>
+
+    <scm>
+        <url>https://github.com/workoss/rust-maven</url>
+        <connection>scm:git:git@github.com:workoss/rust-maven.git</connection>
+        <developerConnection>scm:git:git@github.com:workoss/rust-maven.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>Github Issues</system>
+        <url>https://github.com/workoss/rust-maven/issues</url>
+    </issueManagement>
+
+    <organization>
+        <name>Workoss Software, Inc.</name>
+        <url>https://www.workoss.com</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License,Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>workoss</id>
+            <name>workoss</name>
+            <email>workoss@icloud.com</email>
+            <roles>
+                <role>developer</role>
+                <role>admin</role>
+            </roles>
+        </developer>
+    </developers>
+
     <modules>
+        <module>jni-kt</module>
         <module>jni</module>
         <module>rust-maven-plugin</module>
     </modules>
@@ -21,10 +63,27 @@
 <!--        <kotlin.version>1.9.23</kotlin.version>-->
         <kotlin.version>2.0.0-Beta5</kotlin.version>
 
+        <slf4j.version>2.0.12</slf4j.version>
+        <junit-jupiter.version>5.10.2</junit-jupiter.version>
+        <tomlj.version>1.1.1</tomlj.version>
+
+        <central-publishing-maven-plugin.version>0.4.0</central-publishing-maven-plugin.version>
+        <spotless.version>2.43.0</spotless.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-gpg-plugin.version>3.2.2</maven-gpg-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-bom</artifactId>
+                <version>${slf4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-bom</artifactId>
@@ -32,163 +91,293 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-lombok</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.tomlj</groupId>
+                <artifactId>tomlj</artifactId>
+                <version>${tomlj.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.12</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-lombok</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit5</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.0</version>
-            <scope>test</scope>
-        </dependency>
-
-
-        <!--<dependency>
-            <groupId>io.github.oshai</groupId>
-            <artifactId>kotlin-logging-jvm</artifactId>
-            <version>6.0.3</version>
-        </dependency>-->
-
-    </dependencies>
-
-
-    <repositories>
-        <repository>
-            <id>aliyunmaven</id>
-            <name>阿里云公共仓库</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </repository>
-        <repository>
-            <id>aliyun-spring</id>
-            <name>aliyun-spring</name>
-            <url>https://maven.aliyun.com/repository/spring</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyunmaven</id>
-            <name>阿里云公共仓库</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>aliyun-spring-plugin</id>
-            <name>aliyun-spring-plugin</name>
-            <url>https://maven.aliyun.com/repository/spring-plugin</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
+                    <configuration>
+                        <correctErrorTypes>true</correctErrorTypes>
+                        <jvmTarget>${kotlin.compiler.jvmTarget}</jvmTarget>
+                        <compilerPlugins>
+                            <plugin>all-open</plugin>
+                            <!--                        <plugin>no-arg</plugin>-->
+                            <plugin>lombok</plugin>
+                        </compilerPlugins>
+                        <pluginOptions>
+                            <!--                        <option>&#45;&#45;add-opens java.base/java.lang=ALL-UNNAMED</option>-->
+                            <!--                        <option>&#45;&#45;add-opens=java.base/java.io=ALL-UNNAMED</option>-->
+                            <!--                        <option>lombok:config=${project.basedir}/lombok.config</option>-->
+                        </pluginOptions>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-allopen</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-noarg</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-lombok</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.20</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <args>
+                                    <!--                                <arg>-no-stdlib</arg>-->
+                                    <arg>-include-runtime</arg>
+                                </args>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>test-compile</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless.version}</version>
+                    <configuration>
+                        <!-- optional: limit format enforcement to just the files changed by this feature branch -->
+                        <ratchetFrom>origin/master</ratchetFrom>
+                        <formats>
+                            <!-- you can define as many formats as you want, each is independent -->
+                            <format>
+                                <!-- define the files to apply to -->
+                                <includes>
+                                    <include>.gitattributes</include>
+                                    <include>.gitignore</include>
+                                </includes>
+                                <!-- define the steps to apply to those files -->
+                                <trimTrailingWhitespace/>
+                                <endWithNewline/>
+                                <indent>
+                                    <tabs>true</tabs>
+                                    <spacesPerTab>4</spacesPerTab>
+                                </indent>
+                            </format>
+                        </formats>
+                        <!-- define a language-specific format -->
+                        <java>
+                            <!-- no need to specify files, inferred automatically, but you can if you want -->
+                            <includes>
+                                <include>src/**/*.java</include>
+                            </includes>
+                            <!-- Cleanthat will refactor your code, but it may break your style: apply it before your formatter -->
+<!--                            <cleanchat />-->
+
+                            <!-- apply a specific flavor of google-java-format and reflow long strings -->
+                            <googleJavaFormat />
+
+                            <importOrder />
+
+                            <removeUnusedImports />
+                            <formatAnnotations />
+                            <!-- make sure every file has the following copyright header.
+                              optionally, Spotless can set copyright years by digging
+                              through git history (see "license" section below) -->
+                            <licenseHeader>
+                                <file>license-header</file>
+                            </licenseHeader>
+                        </java>
+                        <kotlin>
+                            <!-- These are the defaults, you can override if you want -->
+                            <includes>
+                                <include>src/main/kotlin/**/*.kt</include>
+                                <include>src/test/kotlin/**/*.kt</include>
+                            </includes>
+
+                            <ktfmt />
+<!--                            <ktlint />-->
+<!--                            <diktat />   -->
+<!--                            <prettier />-->
+                            <licenseHeader>
+                                <file>license-header</file>
+                            </licenseHeader>
+                        </kotlin>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <tokenAuth>true</tokenAuth>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <charset>${project.build.sourceEncoding}</charset>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <docencoding>${project.build.sourceEncoding}</docencoding>
+                        <links>
+                            <link>https://docs.oracle.com/javase/8/docs/api</link>
+                        </links>
+                        <doclint>none</doclint>
+                        <fixClassComment>true</fixClassComment>
+                        <failOnWarnings>false</failOnWarnings>
+                        <doctitle>rust-maven ${project.version} API</doctitle>
+                        <windowtitle>rust-maven ${project.version} API</windowtitle>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <configuration>
-                    <correctErrorTypes>true</correctErrorTypes>
-                    <jvmTarget>${kotlin.compiler.jvmTarget}</jvmTarget>
-                    <compilerPlugins>
-                        <plugin>all-open</plugin>
-                        <plugin>no-arg</plugin>
-                        <plugin>lombok</plugin>
-                    </compilerPlugins>
-                    <pluginOptions>
-<!--                        <option>&#45;&#45;add-opens java.base/java.lang=ALL-UNNAMED</option>-->
-<!--                        <option>&#45;&#45;add-opens=java.base/java.io=ALL-UNNAMED</option>-->
-<!--                        <option>lombok:config=${project.basedir}/lombok.config</option>-->
-                    </pluginOptions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-lombok</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.20</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.4.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <tokenAuth>true</tokenAuth>
-                </configuration>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
             </plugin>
 
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jetbrains.dokka</groupId>
+                        <artifactId>dokka-maven-plugin</artifactId>
+                        <version>1.9.20</version>
+                        <executions>
+                            <execution>
+                                <phase>pre-site</phase>
+                                <goals>
+                                    <goal>dokka</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>${maven-jar-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>dokka-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${project.build.directory}/dokka</classesDirectory>
+                                    <skipIfEmpty>true</skipIfEmpty>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
 
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
