@@ -6,7 +6,7 @@
 
     <groupId>io.github.workoss</groupId>
     <artifactId>rust-maven</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <url>https://github.com/workoss/rust-maven</url>

@@ -89,17 +89,9 @@ class JniLibLoader {
         )
 
     fun getLibName(jniLibName: String): String {
-      var libName = jniLibName
-      val libSuffix =
-          if (OS.isWindows) {
-            ".dll"
-          } else if (OS.isOSX) {
-            ".dylib"
-          } else {
-            ".so"
-          }
+      var libName = jniLibName.replace("-${OS.os}-${OS.arch}","")
+      val libSuffix = if (OS.isWindows) { ".dll" } else if (OS.isOSX) { ".dylib" } else { ".so" }
       libName = libName.replace(libSuffix, "")
-
       if (!OS.isWindows && libName.startsWith("lib")) {
         libName = libName.replaceFirst("lib", "")
       }
