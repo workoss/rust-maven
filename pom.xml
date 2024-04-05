@@ -206,6 +206,7 @@
                         <mavenExecutorId>forked-path</mavenExecutorId>
                         <useReleaseProfile>false</useReleaseProfile>
                         <generateReleasePoms>false</generateReleasePoms>
+                        <signTag>true</signTag>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <arguments>-Prelease</arguments>
                         <arguments>-DskipTests</arguments>
