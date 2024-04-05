@@ -238,8 +238,8 @@
                                     <include>.gitattributes</include>
                                     <include>.gitignore</include>
                                 </includes>
-                                <trimTrailingWhitespace/>
-                                <endWithNewline/>
+                                <trimTrailingWhitespace />
+                                <endWithNewline />
                                 <indent>
                                     <tabs>true</tabs>
                                     <spacesPerTab>4</spacesPerTab>
@@ -250,16 +250,16 @@
                             <includes>
                                 <include>src/**/*.java</include>
                             </includes>
-                            <toggleOffOn/>
+                            <toggleOffOn />
                             <googleJavaFormat>
                                 <version>1.22.0</version>
                                 <style>AOSP</style>
                                 <reflowLongStrings>true</reflowLongStrings>
                                 <groupArtifact>com.google.googlejavaformat:google-java-format</groupArtifact>
                             </googleJavaFormat>
-                            <removeUnusedImports/>
-                            <importOrder/>
-                            <formatAnnotations/>
+                            <removeUnusedImports />
+                            <importOrder />
+                            <formatAnnotations />
                             <licenseHeader>
                                 <file>license-header</file>
                             </licenseHeader>
@@ -268,6 +268,7 @@
                             <sortPom>
                                 <lineSeparator>\n</lineSeparator>
                                 <expandEmptyElements>false</expandEmptyElements>
+                                <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
                                 <nrOfIndentSpace>4</nrOfIndentSpace>
                                 <indentBlankLines>false</indentBlankLines>
                                 <indentSchemaLocation>false</indentSchemaLocation>
@@ -282,7 +283,7 @@
                                 <include>src/main/kotlin/**/*.kt</include>
                                 <include>src/test/kotlin/**/*.kt</include>
                             </includes>
-                            <ktfmt/>
+                            <ktfmt />
                             <licenseHeader>
                                 <file>license-header</file>
                             </licenseHeader>
@@ -291,7 +292,7 @@
                             <includes>
                                 <include>**/*.md</include>
                             </includes>
-                            <flexmark/>
+                            <flexmark />
                         </markdown>
                     </configuration>
                     <executions>
