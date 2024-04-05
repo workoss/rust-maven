@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +34,7 @@ public final class JniLibLoader {
 
     private static final Logger log = LoggerFactory.getLogger("io.github.workoss.jni.JniLibLoader");
 
-    private JniLibLoader() {
-    }
+    private JniLibLoader() {}
 
     private static volatile JniLibLoader INSTANCE = null;
 
@@ -71,7 +69,10 @@ public final class JniLibLoader {
                                         loadSystemLibrary(libName);
                                         return true;
                                     } catch (UnsatisfiedLinkError e) {
-                                        log.warn("[LIB] load system lib {} error: {}", lib, e.getMessage());
+                                        log.warn(
+                                                "[LIB] load system lib {} error: {}",
+                                                lib,
+                                                e.getMessage());
                                         return false;
                                     }
                                 });
@@ -114,23 +115,23 @@ public final class JniLibLoader {
         classLoader = classLoader != null ? classLoader : JniLibLoader.class.getClassLoader();
         String fullLibraryPath = getJniLibPath(prefix, libName, withPlatformDir);
 
-        Path tmpLibFullPath = Paths.get(tmpDir + fullLibraryPath).toAbsolutePath();
-
-        File tmpLibFile = tmpLibFullPath.toFile();
-        if (tmpLibFile.exists()) {
-            log.info("{} was deleted", tmpLibFullPath);
-            tmpLibFile.delete();
-        }
-
-        File parentFile = tmpLibFile.getParentFile();
-        if (!parentFile.exists()) {
-            parentFile.mkdirs();
-        }
-
         try (InputStream libInputStream = classLoader.getResourceAsStream(fullLibraryPath)) {
             if (libInputStream == null) {
                 throw new RuntimeException(libName + " was not found inside JAR.");
             }
+            Path tmpLibFullPath = Paths.get(tmpDir + fullLibraryPath).toAbsolutePath();
+
+            File tmpLibFile = tmpLibFullPath.toFile();
+            if (tmpLibFile.exists()) {
+                log.info("{} was deleted", tmpLibFullPath);
+                tmpLibFile.delete();
+            }
+
+            File parentFile = tmpLibFile.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+
             Files.copy(libInputStream, tmpLibFullPath, StandardCopyOption.REPLACE_EXISTING);
             System.load(tmpLibFullPath.toString());
         }
@@ -138,8 +139,8 @@ public final class JniLibLoader {
     }
 
     private static String getLibName(String jniLibName) {
-        String osArch = "-"+OS.os+"-"+OS.arch;
-        String libName = jniLibName.replace(osArch,"");
+        String osArch = "-" + OS.os + "-" + OS.arch;
+        String libName = jniLibName.replace(osArch, "");
         String libSuffix = OS.isWindows() ? ".dll" : OS.isOSX() ? ".dylib" : ".so";
         libName = libName.replace(libSuffix, "");
         if (!OS.isWindows() && libName.startsWith("lib")) {
@@ -168,7 +169,14 @@ public final class JniLibLoader {
 
         String platformLibName = libName.replace("-", "_");
         if (withPlatformDir) {
-            return actualPrefix + OS.os + "-" + OS.arch + "/" + libPrefix + platformLibName + libSuffix;
+            return actualPrefix
+                    + OS.os
+                    + "-"
+                    + OS.arch
+                    + "/"
+                    + libPrefix
+                    + platformLibName
+                    + libSuffix;
         }
         return actualPrefix + libPrefix + platformLibName + "-" + OS.os + "-" + OS.arch + libSuffix;
     }

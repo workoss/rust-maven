@@ -89,8 +89,15 @@ class JniLibLoader {
         )
 
     fun getLibName(jniLibName: String): String {
-      var libName = jniLibName.replace("-${OS.os}-${OS.arch}","")
-      val libSuffix = if (OS.isWindows) { ".dll" } else if (OS.isOSX) { ".dylib" } else { ".so" }
+      var libName = jniLibName.replace("-${OS.os}-${OS.arch}", "")
+      val libSuffix =
+          if (OS.isWindows) {
+            ".dll"
+          } else if (OS.isOSX) {
+            ".dylib"
+          } else {
+            ".so"
+          }
       libName = libName.replace(libSuffix, "")
       if (!OS.isWindows && libName.startsWith("lib")) {
         libName = libName.replaceFirst("lib", "")
@@ -160,27 +167,28 @@ class JniLibLoader {
     ): Result<Unit> = runCatching {
       val classLoader = classLoader ?: JniLibLoader::class.java.classLoader
       val fullLibraryPath = getJniLibPath(prefix, libName, withPlatformDir)
-      // tmp+ fullLibraryPath
-      val tmpLibFulPath: Path = Paths.get("$tmpDir$fullLibraryPath").toAbsolutePath()
 
-      tmpLibFulPath.toFile().exists().also {
-        if (it) {
-          log.info("$tmpLibFulPath was deleted")
-        }
-      }
-
-      // create parent dir if not exists
-      val parentFile = tmpLibFulPath.parent.toFile()
-      if (!parentFile.exists()) {
-        parentFile.mkdirs()
-      }
       classLoader.getResourceAsStream(fullLibraryPath).use {
         if (it == null) {
           throw RuntimeException("$libName was not found inside JAR.")
         }
+        // tmp+ fullLibraryPath
+        val tmpLibFulPath: Path = Paths.get("$tmpDir$fullLibraryPath").toAbsolutePath()
+
+        tmpLibFulPath.toFile().exists().also {
+          if (it) {
+            log.info("$tmpLibFulPath was deleted")
+          }
+        }
+
+        // create parent dir if not exists
+        val parentFile = tmpLibFulPath.parent.toFile()
+        if (!parentFile.exists()) {
+          parentFile.mkdirs()
+        }
         Files.copy(it, tmpLibFulPath, StandardCopyOption.REPLACE_EXISTING)
+        System.load(tmpLibFulPath.toString())
       }
-      System.load(tmpLibFulPath.toString())
     }
   }
 }
