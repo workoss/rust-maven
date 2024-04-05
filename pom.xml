@@ -4,7 +4,7 @@
 
     <groupId>io.github.workoss</groupId>
     <artifactId>rust-maven</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <description>rust maven plugin and jni lib loader</description>
 
@@ -44,7 +44,7 @@
     <scm>
         <connection>scm:git:git@github.com:workoss/rust-maven.git</connection>
         <developerConnection>scm:git:git@github.com:workoss/rust-maven.git</developerConnection>
-        <tag>v1.0.1</tag>
+        <tag>v1.0.2</tag>
         <url>https://github.com/workoss/rust-maven</url>
     </scm>
 
