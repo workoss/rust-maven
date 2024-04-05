@@ -1,4 +1,5 @@
 # rust-maven
+
 [![Maven Plugin](https://img.shields.io/maven-central/v/io.github.workoss/rust-maven-plugin?color=blue&label=maven%20plugin)](https://central.sonatype.com/search?q=io.github.workoss/rust-maven-plugin)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.workoss/jni.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:io.github.workoss)
 [![javadoc](https://javadoc.io/badge2/io.github.workoss/jni/javadoc.svg)](https://javadoc.io/doc/io.github.workoss/jni)  
