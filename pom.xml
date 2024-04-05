@@ -260,7 +260,7 @@
                             <!-- Cleanthat will refactor your code, but it may break your style: apply it before your formatter -->
                             <!--                            <cleanchat />-->
 
-                            <toggleOffOn></toggleOffOn>
+                            <toggleOffOn/>
                             <!-- apply a specific flavor of google-java-format and reflow long strings -->
                             <googleJavaFormat>
                                 <version>1.22.0</version>
@@ -269,10 +269,10 @@
                                 <groupArtifact>com.google.googlejavaformat:google-java-format</groupArtifact>
                             </googleJavaFormat>
 
-                            <removeUnusedImports></removeUnusedImports>
-                            <importOrder></importOrder>
+                            <removeUnusedImports/>
+                            <importOrder/>
 
-                            <formatAnnotations></formatAnnotations>
+                            <formatAnnotations/>
 
                             <licenseHeader>
                                 <file>license-header</file>
@@ -297,7 +297,7 @@
                                 <include>src/main/kotlin/**/*.kt</include>
                                 <include>src/test/kotlin/**/*.kt</include>
                             </includes>
-                            <ktfmt></ktfmt>
+                            <ktfmt/>
                             <licenseHeader>
                                 <file>license-header</file>
                             </licenseHeader>
@@ -306,7 +306,7 @@
                             <includes>
                                 <include>**/*.md</include>
                             </includes>
-                            <flexmark></flexmark>
+                            <flexmark/>
                         </markdown>
                     </configuration>
                     <executions>
