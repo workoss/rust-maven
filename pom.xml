@@ -258,7 +258,7 @@
                                 <include>src/**/*.java</include>
                             </includes>
                             <!-- Cleanthat will refactor your code, but it may break your style: apply it before your formatter -->
-                            <!--                            <cleanchat />-->
+                            <!--                            <cleanchat/>-->
 
                             <toggleOffOn/>
                             <!-- apply a specific flavor of google-java-format and reflow long strings -->
