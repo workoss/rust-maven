@@ -243,8 +243,8 @@
                                 </includes>
 
                                 <!-- define the steps to apply to those files -->
-                                <trimTrailingWhitespace></trimTrailingWhitespace>
-                                <endWithNewline></endWithNewline>
+                                <trimTrailingWhitespace/>
+                                <endWithNewline/>
                                 <indent>
                                     <tabs>true</tabs>
                                     <spacesPerTab>4</spacesPerTab>
@@ -281,8 +281,8 @@
                         <pom>
                             <sortPom>
                                 <lineSeparator>\n</lineSeparator>
+                                <expandEmptyElements>false</expandEmptyElements>
                                 <nrOfIndentSpace>4</nrOfIndentSpace>
-
                                 <indentBlankLines>false</indentBlankLines>
                                 <indentSchemaLocation>false</indentSchemaLocation>
                                 <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
