@@ -279,45 +279,13 @@
                             </licenseHeader>
                         </java>
                         <pom>
-
                             <sortPom>
-                                <encoding>UTF-8</encoding>
-                                <!-- The encoding of the pom files -->
-                                <!--                <lineSeparator>${line.separator}</lineSeparator> &lt;!&ndash; line separator to use &ndash;&gt;-->
-                                <expandEmptyElements>true</expandEmptyElements>
-                                <!-- Should empty elements be expanded-->
-                                <spaceBeforeCloseEmptyElement>false</spaceBeforeCloseEmptyElement>
-                                <!-- Should a space be added inside self-closing elements-->
-                                <keepBlankLines>true</keepBlankLines>
-                                <!-- Keep empty lines -->
+                                <lineSeparator>\n</lineSeparator>
                                 <nrOfIndentSpace>4</nrOfIndentSpace>
-                                <!-- Indentation -->
+
                                 <indentBlankLines>false</indentBlankLines>
-                                <!-- Should empty lines be indented -->
                                 <indentSchemaLocation>false</indentSchemaLocation>
-                                <!-- Should schema locations be indented -->
                                 <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
-                                <!-- Sort order of elements: https://github.com/Ekryd/sortpom/wiki/PredefinedSortOrderProfiles-->
-                                <sortOrderFile></sortOrderFile>
-                                <!-- Custom sort order of elements: https://raw.githubusercontent.com/Ekryd/sortpom/master/sorter/src/main/resources/custom_1.xml -->
-
-                                <sortDependencies></sortDependencies>
-                                <!-- Sort dependencies: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
-
-                                <sortDependencyManagement></sortDependencyManagement>
-                                <!-- Sort dependency management: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
-
-                                <sortDependencyExclusions></sortDependencyExclusions>
-                                <!-- Sort dependency exclusions: https://github.com/Ekryd/sortpom/wiki/SortDependencies-->
-
-                                <sortPlugins></sortPlugins>
-                                <!-- Sort plugins: https://github.com/Ekryd/sortpom/wiki/SortPlugins -->
-                                <sortProperties>false</sortProperties>
-                                <!-- Sort properties -->
-                                <sortModules>false</sortModules>
-                                <!-- Sort modules -->
-                                <sortExecutions>false</sortExecutions>
-                                <!-- Sort plugin executions -->
                             </sortPom>
                         </pom>
                         <upToDateChecking>
@@ -329,23 +297,16 @@
                                 <include>src/main/kotlin/**/*.kt</include>
                                 <include>src/test/kotlin/**/*.kt</include>
                             </includes>
-
                             <ktfmt></ktfmt>
-                            <!--                            <ktlint />-->
-                            <!--                            <diktat />   -->
-                            <!--                            <prettier />-->
                             <licenseHeader>
                                 <file>license-header</file>
                             </licenseHeader>
                         </kotlin>
                         <markdown>
                             <includes>
-                                <!-- You have to set the target manually -->
                                 <include>**/*.md</include>
                             </includes>
-
                             <flexmark></flexmark>
-                            <!-- has its own section below -->
                         </markdown>
                     </configuration>
                     <executions>
