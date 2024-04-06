@@ -7,11 +7,11 @@
         <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    
     <artifactId>rust-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <description>cargo maven plugin</description>
-
+    
     <dependencies>
         <dependency>
             <groupId>io.github.workoss</groupId>
@@ -51,7 +51,7 @@
             <groupId>org.tomlj</groupId>
             <artifactId>tomlj</artifactId>
         </dependency>
-
+        
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-lombok</artifactId>
@@ -70,18 +70,18 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
-
+        
     </dependencies>
-
+    
     <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     </build>
-
+    
 </project>

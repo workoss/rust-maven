@@ -7,15 +7,20 @@
         <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    
     <artifactId>jni</artifactId>
     <packaging>jar</packaging>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo-shared-resources</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
-
+    
 </project>

@@ -7,10 +7,10 @@
         <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    
     <artifactId>jni-kt</artifactId>
     <packaging>jar</packaging>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -21,16 +21,16 @@
             <artifactId>kotlin-stdlib</artifactId>
         </dependency>
     </dependencies>
-
+    
     <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     </build>
-
+    
 </project>

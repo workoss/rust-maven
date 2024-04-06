@@ -13,34 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.github.workoss.jni;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+// @formatter:off
 /**
+ * OS detection
+ *
  * @author workoss
  */
 @SuppressWarnings("ALL")
 public final class OS {
 
+    private OS() {
+    }
+
+
+
     private static final class OSDetector extends Detector {
 
         private static final Properties detectedProperties = new Properties(System.getProperties());
+
+        private OSDetector() {
+        }
 
         static {
             detect(detectedProperties, Collections.emptyList());
         }
 
+        private static String get(final String key) {
+            return (String) detectedProperties.get(key);
+        }
+
         private static final String os = (String) detectedProperties.get(DETECTED_NAME);
         private static final String arch = (String) detectedProperties.get(DETECTED_ARCH);
-        private static final String classifier =
-                (String) detectedProperties.get(DETECTED_CLASSIFIER);
+        private static final String classifier = (String) detectedProperties.get(DETECTED_CLASSIFIER);
     }
 
     public static final String os = OSDetector.os;
@@ -171,9 +193,7 @@ public final class OS {
         private static final String LINUX_ID_PREFIX = "ID=";
         private static final String LINUX_ID_LIKE_PREFIX = "ID_LIKE=";
         private static final String LINUX_VERSION_ID_PREFIX = "VERSION_ID=";
-        private static final String[] LINUX_OS_RELEASE_FILES = {
-            "/etc/os-release", "/usr/lib/os-release"
-        };
+        private static final String[] LINUX_OS_RELEASE_FILES = {"/etc/os-release", "/usr/lib/os-release"};
         private static final String REDHAT_RELEASE_FILE = "/etc/redhat-release";
         private static final String[] DEFAULT_REDHAT_VARIANTS = {"rhel", "fedora"};
         private static final Pattern VERSION_REGEX = Pattern.compile("((\\d+)\\.(\\d+)).*");
@@ -305,11 +325,10 @@ public final class OS {
          * based on the {@code ID}, {@code ID_LIKE}, and {@code VERSION_ID} entries.
          */
         private static LinuxRelease parseLinuxOsReleaseFile(String fileName) {
-            try (BufferedReader reader =
-                    Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8)) {
+            try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8)) {
                 String id = null;
                 String version = null;
-                final Set<String> likeSet = new LinkedHashSet<String>();
+                final Set<String> likeSet = new LinkedHashSet<>();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // Parse the ID line.
@@ -325,17 +344,13 @@ public final class OS {
                     // Parse the VERSION_ID line.
                     if (line.startsWith(LINUX_VERSION_ID_PREFIX)) {
                         // Set the ID for this version.
-                        version =
-                                normalizeOsReleaseValue(
-                                        line.substring(LINUX_VERSION_ID_PREFIX.length()));
+                        version = normalizeOsReleaseValue(line.substring(LINUX_VERSION_ID_PREFIX.length()));
                         continue;
                     }
 
                     // Parse the ID_LIKE line.
                     if (line.startsWith(LINUX_ID_LIKE_PREFIX)) {
-                        line =
-                                normalizeOsReleaseValue(
-                                        line.substring(LINUX_ID_LIKE_PREFIX.length()));
+                        line = normalizeOsReleaseValue(line.substring(LINUX_ID_LIKE_PREFIX.length()));
 
                         // Split the line on any whitespace.
                         final String[] parts = line.split("\\s+");
@@ -353,13 +368,12 @@ public final class OS {
         }
 
         /**
-         * Parses the {@code /etc/redhat-release} and returns a {@link LinuxRelease} containing the
-         * ID and like ["rhel", "fedora", ID]. Currently only supported for CentOS, Fedora, and
-         * RHEL. Other variants will return {@code null}.
+         * Parses the {@code /etc/redhat-release} and returns a {@link LinuxRelease} containing the ID
+         * and like ["rhel", "fedora", ID]. Currently only supported for CentOS, Fedora, and RHEL. Other
+         * variants will return {@code null}.
          */
         private static LinuxRelease parseLinuxRedhatReleaseFile(String fileName) {
-            try (BufferedReader reader =
-                    Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8)) {
+            try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName), StandardCharsets.UTF_8)) {
                 // There is only a single line in this file.
                 String line = reader.readLine();
                 if (line != null) {
@@ -383,8 +397,7 @@ public final class OS {
                         version = versionMatcher.group(1);
                     }
 
-                    final Set<String> likeSet =
-                            new LinkedHashSet<String>(Arrays.asList(DEFAULT_REDHAT_VARIANTS));
+                    final Set<String> likeSet = new LinkedHashSet<>(Arrays.asList(DEFAULT_REDHAT_VARIANTS));
                     likeSet.add(id);
 
                     return new LinuxRelease(id, version, likeSet);
@@ -395,9 +408,10 @@ public final class OS {
             return null;
         }
 
-        private static String normalizeOsReleaseValue(String value) {
+        private static String normalizeOsReleaseValue(final String value) {
             // Remove any quotes from the string.
             return value.trim().replace("\"", "");
         }
     }
 }
+// @formatter:on
