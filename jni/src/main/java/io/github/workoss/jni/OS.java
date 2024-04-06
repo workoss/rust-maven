@@ -162,8 +162,8 @@ public final class OS {
         }
 
         private static void setProperty(Properties props, String name, String value) {
-            props.setProperty(name, value);
             if (value != null) {
+                props.setProperty(name, value);
                 System.setProperty(name, value);
             }
         }
