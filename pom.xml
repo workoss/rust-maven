@@ -22,7 +22,7 @@
         <!--        <kotlin.version>1.9.23</kotlin.version>-->
         <kotlin.version>2.0.0-RC1</kotlin.version>
         
-        <slf4j.version>2.0.12</slf4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <junit-jupiter.version>5.10.2</junit-jupiter.version>
         <tomlj.version>1.1.1</tomlj.version>
         
