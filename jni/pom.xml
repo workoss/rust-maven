@@ -16,11 +16,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo-shared-resources</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
     
 </project>
