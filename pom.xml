@@ -24,7 +24,7 @@
         
         <slf4j.version>2.0.20</slf4j.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
-        <tomlj.version>1.3.0</tomlj.version>
+        <tomlj.version>2.2.0</tomlj.version>
 
         <maven-plugin.version>3.9.16</maven-plugin.version>
         <maven-plugin-annotations.version>3.16.0</maven-plugin-annotations.version>
